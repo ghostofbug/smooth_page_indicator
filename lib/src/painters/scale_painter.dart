@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:smooth_page_indicator/src/effects/scale_effect.dart';
 
+
+import '../effects/scale_effect.dart';
 import 'indicator_painter.dart';
 
-/// Paints a scale-dot transition effect between active
-/// and non-active dots
-///
-/// Live demo at
-/// https://github.com/Milad-Akarie/smooth_page_indicator/blob/f7ee92e7413a31de77bfb487755d64a385d52a52/demo/scale.gif
 class ScalePainter extends BasicIndicatorPainter {
-  /// The painting configuration
   final ScaleEffect effect;
 
-  /// Default constructor
   ScalePainter({
     required double offset,
     required this.effect,
@@ -49,20 +43,14 @@ class ScalePainter extends BasicIndicatorPainter {
   }
 
   RRect _calcBounds(double canvasHeight, num offset, [double scale = 1.0]) {
-    final startingPoint = effect.dotWidth * effect.scale / 2;
-    final width = effect.dotWidth * scale;
-    final height = effect.dotHeight * scale;
-    final xPos = startingPoint -
+    var width = effect.dotWidth * scale;
+    var height = effect.dotHeight * scale;
+    var startingPoint = effect.dotWidth + effect.spacing / 2;
+    var xPos = startingPoint / 2 -
         width / 2 +
         (offset * (effect.dotWidth + effect.spacing));
-    final yPos = canvasHeight / 2;
-
-    return RRect.fromLTRBR(
-      xPos,
-      yPos - height / 2,
-      xPos + width,
-      yPos + height / 2,
-      dotRadius * scale,
-    );
+    var yPos = canvasHeight / 2;
+    return RRect.fromLTRBR(xPos, yPos - height / 2, xPos + width,
+        yPos + height / 2, dotRadius * scale);
   }
 }

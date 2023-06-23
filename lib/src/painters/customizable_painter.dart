@@ -1,26 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:smooth_page_indicator/src/effects/customizable_effect.dart';
 
+
+import '../effects/customizable_effect.dart';
 import 'indicator_painter.dart';
 
-/// Paints user-customizable transition effect between active
-/// and non-active dots
-///
-/// Live demos at
-/// https://github.com/Milad-Akarie/smooth_page_indicator/blob/f7ee92e7413a31de77bfb487755d64a385d52a52/demo/custimizable-1.gif
-/// https://github.com/Milad-Akarie/smooth_page_indicator/blob/f7ee92e7413a31de77bfb487755d64a385d52a52/demo/customizable-2.gif
-/// https://github.com/Milad-Akarie/smooth_page_indicator/blob/f7ee92e7413a31de77bfb487755d64a385d52a52/demo/customizable-3.gif
-/// https://github.com/Milad-Akarie/smooth_page_indicator/blob/f7ee92e7413a31de77bfb487755d64a385d52a52/demo/customizable-4.gif
 class CustomizablePainter extends IndicatorPainter {
-  /// The painting configuration
   final CustomizableEffect effect;
-
-  /// The number of pages
   final int count;
 
-  /// Default constructor
   CustomizablePainter({
     required double offset,
     required this.effect,
@@ -116,7 +105,7 @@ class CustomizablePainter extends IndicatorPainter {
         Paint()..color = decoration.color,
       );
 
-      final borderPaint = Paint()
+      final borerPaint = Paint()
         ..strokeWidth = decoration.dotBorder.width
         ..style = PaintingStyle.stroke
         ..color = decoration.dotBorder.color;
@@ -125,15 +114,13 @@ class CustomizablePainter extends IndicatorPainter {
 
       canvas.drawPath(
         borderPath.transform(matrix4.storage),
-        borderPaint,
+        borerPaint,
       );
     }
   }
 }
 
-/// Adds [rotateAngle] functionality to [Matrix4]
 extension Matrix4X on Matrix4 {
-  /// Rotates teh matrix by given [angle]
   Matrix4 rotateAngle(double angle, {Offset? origin}) {
     final angleRadians = angle * pi / 180;
 

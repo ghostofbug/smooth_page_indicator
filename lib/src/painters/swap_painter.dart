@@ -1,20 +1,14 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:smooth_page_indicator/src/effects/swap_effect.dart';
 
+
+import '../effects/swap_effect.dart';
 import 'indicator_painter.dart';
 
-/// Paints a swapping transition effect between active
-/// and non-active dots
-///
-/// Live demo at
-/// https://github.com/Milad-Akarie/smooth_page_indicator/blob/f7ee92e7413a31de77bfb487755d64a385d52a52/demo/swap.gif
 class SwapPainter extends BasicIndicatorPainter {
-  /// The painting configuration
   final SwapEffect effect;
 
-  /// Default constructor
   SwapPainter({
     required double offset,
     required this.effect,

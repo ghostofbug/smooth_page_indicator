@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../effects/scrolling_dots_effect.dart';
 import 'indicator_painter.dart';
 
-/// Paints dots scrolling transition effect and considers
-/// active dot to always be in the center
-/// Live demo at
-/// https://github.com/Milad-Akarie/smooth_page_indicator/blob/f7ee92e7413a31de77bfb487755d64a385d52a52/demo/scrolling-dots-2.gif
 class ScrollingDotsWithFixedCenterPainter extends BasicIndicatorPainter {
-  /// The painting configuration
   final ScrollingDotsEffect effect;
 
-  /// Default constructor
   ScrollingDotsWithFixedCenterPainter({
     required this.effect,
     required int count,
@@ -38,7 +32,7 @@ class ScrollingDotsWithFixedCenterPainter extends BasicIndicatorPainter {
       }
 
       var scale = 1.0;
-      const smallDotScale = 0.66;
+      final smallDotScale = 0.66;
       final revDotOffset = 1 - dotOffset;
       final switchPoint = (effect.maxVisibleDots - 1) / 2;
 

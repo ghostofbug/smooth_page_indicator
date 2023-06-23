@@ -1,14 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:smooth_page_indicator/src/painters/indicator_painter.dart';
-import 'package:smooth_page_indicator/src/painters/scrolling_dots_painter.dart';
-import 'package:smooth_page_indicator/src/painters/scrolling_dots_painter_with_fixed_center.dart';
 
+
+
+import '../painters/indicator_painter.dart';
+import '../painters/scrolling_dots_painter.dart';
+import '../painters/scrolling_dots_painter_with_fixed_center.dart';
 import 'indicator_effect.dart';
 
-/// Holds painting configuration to be used by [ScrollingDotsPainter]
-/// or [ScrollingDotsWithFixedCenterPainter]
 class ScrollingDotsEffect extends BasicIndicatorEffect {
   /// The active dot strokeWidth
   /// this is ignored if [fixedCenter] is false
@@ -23,10 +23,9 @@ class ScrollingDotsEffect extends BasicIndicatorEffect {
   /// must be an odd number that's >= 5
   final int maxVisibleDots;
 
-  /// if True the old center dot style will be used
+  // if True the old center dot style will be used
   final bool fixedCenter;
 
-  /// Default constructor
   const ScrollingDotsEffect({
     this.activeStrokeWidth = 1.5,
     this.activeDotScale = 1.3,
@@ -56,7 +55,7 @@ class ScrollingDotsEffect extends BasicIndicatorEffect {
 
   @override
   Size calculateSize(int count) {
-    /// Add the scaled dot width to our size calculation
+    // Add the scaled dot width to our size calculation
     var width = (dotWidth + spacing) * (min(count, maxVisibleDots));
     if (fixedCenter && count <= maxVisibleDots) {
       width = ((count * 2) - 1) * (dotWidth + spacing);

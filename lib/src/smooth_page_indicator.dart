@@ -1,28 +1,24 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import 'effects/indicator_effect.dart';
 import 'effects/worm_effect.dart';
 import 'painters/indicator_painter.dart';
 
-/// Signature for a callback function used to report
-/// dot tap-events
 typedef OnDotClicked = void Function(int index);
 
-/// A widget that draws a representation of pages count
-/// Inside of a  [PageView]
-///
-/// Uses the [PageController.offset] to animate the active dot
-class SmoothPageIndicator extends StatefulWidget {
-  /// The page view controller
+class SmoothPageIndicator extends AnimatedWidget {
+  // Page view controller
   final PageController controller;
 
   /// Holds effect configuration to be used in the [BasicIndicatorPainter]
   final IndicatorEffect effect;
 
-  /// Layout direction vertical || horizontal
+  /// layout direction vertical || horizontal
   ///
-  /// This will only rotate the canvas in which the dots are drawn.
-  ///
+  /// This will only rotate the canvas in which the dots
+  /// are drawn,
   /// It will not affect [effect.dotWidth] and [effect.dotHeight]
   final Axis axisDirection;
 
@@ -32,11 +28,10 @@ class SmoothPageIndicator extends StatefulWidget {
   /// If [textDirection] is [TextDirection.rtl], page direction will be flipped
   final TextDirection? textDirection;
 
-  /// Reports dot taps
+  /// on dot clicked callback
   final OnDotClicked? onDotClicked;
 
-  /// Default constructor
-  const SmoothPageIndicator({
+  SmoothPageIndicator({
     Key? key,
     required this.controller,
     required this.count,
@@ -44,142 +39,82 @@ class SmoothPageIndicator extends StatefulWidget {
     this.textDirection,
     this.onDotClicked,
     this.effect = const WormEffect(),
-  }) : super(key: key);
-
-  @override
-  State<SmoothPageIndicator> createState() => _SmoothPageIndicatorState();
-}
-
-mixin _SizeAndRotationCalculatorMixin {
-  /// The size of canvas
-  late Size size;
-
-  /// Rotation quarters of canvas
-  int quarterTurns = 0;
-
-  BuildContext get context;
-
-  TextDirection? get textDirection;
-
-  Axis get axisDirection;
-
-  int get count;
-
-  IndicatorEffect get effect;
-
-  void updateSizeAndRotation() {
-    size = effect.calculateSize(count);
-
-    /// if textDirection is not provided use the nearest directionality up the widgets tree;
-    final isRTL = (textDirection ?? _getDirectionality()) == TextDirection.rtl;
-    if (axisDirection == Axis.vertical) {
-      quarterTurns = 1;
-    } else {
-      quarterTurns = isRTL ? 2 : 0;
-    }
-  }
-
-  TextDirection? _getDirectionality() {
-    return context
-        .findAncestorWidgetOfExactType<Directionality>()
-        ?.textDirection;
-  }
-}
-
-class _SmoothPageIndicatorState extends State<SmoothPageIndicator>
-    with _SizeAndRotationCalculatorMixin {
-  @override
-  void initState() {
-    super.initState();
-    updateSizeAndRotation();
-  }
-
-  @override
-  void didUpdateWidget(covariant SmoothPageIndicator oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    updateSizeAndRotation();
-  }
+  }) : super(key: key, listenable: controller);
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: widget.controller,
-      builder: (context, _) => SmoothIndicator(
-        offset: _offset,
-        count: count,
-        effect: effect,
-        onDotClicked: widget.onDotClicked,
-        size: size,
-        quarterTurns: quarterTurns,
-      ),
+    return SmoothIndicator(
+      offset: _offset,
+      count: count,
+      effect: effect,
+      textDirection: textDirection,
+      axisDirection: axisDirection,
+      onDotClicked: onDotClicked,
     );
   }
 
   double get _offset {
     try {
-      var offset =
-          widget.controller.page ?? widget.controller.initialPage.toDouble();
-      return offset % widget.count;
+      var offset = controller.page ?? controller.initialPage.toDouble();
+      return offset % count;
     } catch (_) {
-      return widget.controller.initialPage.toDouble();
+      return controller.initialPage.toDouble();
     }
   }
-
-  @override
-  int get count => widget.count;
-
-  @override
-  IndicatorEffect get effect => widget.effect;
-
-  @override
-  Axis get axisDirection => widget.axisDirection;
-
-  @override
-  TextDirection? get textDirection => widget.textDirection;
 }
 
-/// Draws dot-ish representation of pages by
-/// the number of [count] and animates the active
-/// page using [offset]
 class SmoothIndicator extends StatelessWidget {
-  /// The active page offset
+  // to listen for page offset updates
   final double offset;
 
   /// Holds effect configuration to be used in the [BasicIndicatorPainter]
   final IndicatorEffect effect;
 
+  /// layout direction vertical || horizontal
+  final Axis axisDirection;
+
   /// The number of pages
   final int count;
 
-  /// Reports dot-taps
+  /// If [textDirection] is [TextDirection.rtl], page direction will be flipped
+  final TextDirection? textDirection;
+
+  /// on dot clicked callback
   final OnDotClicked? onDotClicked;
 
-  /// The size of canvas
-  final Size size;
+  /// canvas size
+  final Size _size;
 
-  /// The rotation of cans based on
-  /// text directionality and [axisDirection]
-  final int quarterTurns;
-
-  /// Default constructor
-  const SmoothIndicator({
+  SmoothIndicator({
     Key? key,
     required this.offset,
     required this.count,
-    required this.size,
-    this.quarterTurns = 0,
+    this.axisDirection = Axis.horizontal,
     this.effect = const WormEffect(),
+    this.textDirection,
     this.onDotClicked,
-  }) : super(key: key);
+  })  :
+        // different effects have different sizes
+        // so we calculate size based on the provided effect
+        _size = effect.calculateSize(count),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // if textDirection is not provided use the nearest directionality up the widgets tree;
+    final isRTL =
+        (textDirection ?? Directionality.of(context)) == TextDirection.rtl;
+
     return RotatedBox(
-      quarterTurns: quarterTurns,
+      quarterTurns: axisDirection == Axis.vertical
+          ? 1
+          : isRTL
+              ? 2
+              : 0,
       child: GestureDetector(
         onTapUp: _onTap,
         child: CustomPaint(
-          size: size,
+          size: _size,
           // rebuild the painter with the new offset every time it updates
           painter: effect.buildPainter(count, offset),
         ),
@@ -189,7 +124,11 @@ class SmoothIndicator extends StatelessWidget {
 
   void _onTap(details) {
     if (onDotClicked != null) {
-      var index = effect.hitTestDots(details.localPosition.dx, count, offset);
+      var index = effect.hitTestDots(
+        details.localPosition.dx,
+        count,
+        offset,
+      );
       if (index != -1 && index != offset.toInt()) {
         onDotClicked?.call(index);
       }
@@ -197,12 +136,7 @@ class SmoothIndicator extends StatelessWidget {
   }
 }
 
-/// Unlike [SmoothPageIndicator] this indicator is self-animated
-/// and it only needs to know active index
-///
-/// Useful for paging widgets that does not use [PageController]
 class AnimatedSmoothIndicator extends ImplicitlyAnimatedWidget {
-  /// The index of active page
   final int activeIndex;
 
   /// Holds effect configuration to be used in the [BasicIndicatorPainter]
@@ -217,11 +151,10 @@ class AnimatedSmoothIndicator extends ImplicitlyAnimatedWidget {
   /// If [textDirection] is [TextDirection.rtl], page direction will be flipped
   final TextDirection? textDirection;
 
-  /// Reports dot-taps
+  /// On dot clicked callback
   final Function(int index)? onDotClicked;
 
-  /// Default constructor
-  const AnimatedSmoothIndicator({
+  AnimatedSmoothIndicator({
     Key? key,
     required this.activeIndex,
     required this.count,
@@ -240,26 +173,13 @@ class AnimatedSmoothIndicator extends ImplicitlyAnimatedWidget {
         );
 
   @override
-  AnimatedWidgetBaseState<AnimatedSmoothIndicator> createState() =>
+  _AnimatedSmoothIndicatorState createState() =>
       _AnimatedSmoothIndicatorState();
 }
 
 class _AnimatedSmoothIndicatorState
-    extends AnimatedWidgetBaseState<AnimatedSmoothIndicator>
-    with _SizeAndRotationCalculatorMixin {
+    extends AnimatedWidgetBaseState<AnimatedSmoothIndicator> {
   Tween<double>? _offset;
-
-  @override
-  void initState() {
-    super.initState();
-    updateSizeAndRotation();
-  }
-
-  @override
-  void didUpdateWidget(covariant AnimatedSmoothIndicator oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    updateSizeAndRotation();
-  }
 
   @override
   void forEachTween(visitor) {
@@ -271,30 +191,19 @@ class _AnimatedSmoothIndicatorState
   }
 
   @override
-  int get count => widget.count;
-
-  @override
-  IndicatorEffect get effect => widget.effect;
-
-  @override
-  Axis get axisDirection => widget.axisDirection;
-
-  @override
-  TextDirection? get textDirection => widget.textDirection;
-
-  @override
   Widget build(BuildContext context) {
     final offset = _offset;
     if (offset == null) {
       throw 'Offset has not been initialized';
     }
+
     return SmoothIndicator(
       offset: offset.evaluate(animation),
       count: widget.count,
       effect: widget.effect,
+      textDirection: widget.textDirection,
+      axisDirection: widget.axisDirection,
       onDotClicked: widget.onDotClicked,
-      size: size,
-      quarterTurns: quarterTurns,
     );
   }
 }

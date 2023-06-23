@@ -1,21 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:smooth_page_indicator/src/effects/color_transition_effect.dart';
 
+import '../effects/color_transition_effect.dart';
 import 'indicator_painter.dart';
 
-/// Paints a color change transition effect between active
-/// and non-active dots
-///
-/// Live demo at
-/// https://github.com/Milad-Akarie/smooth_page_indicator/blob/f7ee92e7413a31de77bfb487755d64a385d52a52/demo/color-transition.gif
 class TransitionPainter extends BasicIndicatorPainter {
-  /// The painting configuration
   final ColorTransitionEffect effect;
 
-  /// Default constructor
   TransitionPainter({
     required this.effect,
     required int count,

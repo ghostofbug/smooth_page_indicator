@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:smooth_page_indicator/src/painters/indicator_painter.dart';
 
-/// An Abstraction for a dot-indicator animation effect
+import '../painters/indicator_painter.dart';
+
+
 abstract class IndicatorEffect {
-  /// Const constructor
   const IndicatorEffect();
 
   /// Builds a new painter every time the page offset changes
@@ -12,7 +12,7 @@ abstract class IndicatorEffect {
   /// Calculates the size of canvas based on
   /// dots count, size and spacing
   ///
-  /// Implementers can override this function
+  /// Other effects can override this function
   /// to calculate their own size
   Size calculateSize(int count);
 
@@ -23,8 +23,6 @@ abstract class IndicatorEffect {
   int hitTestDots(double dx, int count, double current);
 }
 
-/// Basic implementation of [IndicatorEffect] that holds some shared
-/// properties and behaviors between different effects
 abstract class BasicIndicatorEffect extends IndicatorEffect {
   /// Singe dot width
   final double dotWidth;
@@ -50,7 +48,6 @@ abstract class BasicIndicatorEffect extends IndicatorEffect {
   /// This is ignored if [paintStyle] is PaintStyle.fill
   final double strokeWidth;
 
-  /// Default construe
   const BasicIndicatorEffect({
     required this.strokeWidth,
     required this.dotWidth,

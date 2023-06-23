@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:smooth_page_indicator/src/effects/expanding_dots_effect.dart';
 
+import '../effects/expanding_dots_effect.dart';
 import 'indicator_painter.dart';
 
-/// Paints an expanding dot transition effect between active
-/// and non-active dot
-///
-/// Live demo at
-/// https://github.com/Milad-Akarie/smooth_page_indicator/blob/f7ee92e7413a31de77bfb487755d64a385d52a52/demo/expanding-dot.gif
 class ExpandingDotsPainter extends BasicIndicatorPainter {
-  /// The painting configuration
   final ExpandingDotsEffect effect;
 
-  /// Default constructor
   ExpandingDotsPainter({
     required double offset,
     required this.effect,
@@ -51,7 +44,14 @@ class ExpandingDotsPainter extends BasicIndicatorPainter {
         dotRadius,
       );
       drawingOffset = rRect.right;
-      canvas.drawRRect(rRect, dotPaint..color = color);
+      if (current == i) {
+        dotPaint.color = effect.activeDotColor;
+        canvas.drawRRect(rRect, dotPaint..style = PaintingStyle.fill);
+      } else {
+        dotPaint.color = Colors.white;
+        dotPaint.style = PaintingStyle.stroke;
+        canvas.drawRRect(rRect, dotPaint..color = color);
+      }
     }
   }
 }

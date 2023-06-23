@@ -2,24 +2,14 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+
+import '../effects/scrolling_dots_effect.dart';
 import 'indicator_painter.dart';
 
-/// Paints a scale-dot transition effect between active
-/// and non-active dots
-///
-/// Good for big pages count because it can show
-/// only [ScrollingDotsEffect.maxVisibleDots] at once
-/// and scrolls as needed
-///
-/// Live demo at
-/// https://github.com/Milad-Akarie/smooth_page_indicator/blob/f7ee92e7413a31de77bfb487755d64a385d52a52/demo/scrolling-dots-2.gif
 class ScrollingDotsPainter extends BasicIndicatorPainter {
-  /// The painting configuration
   final ScrollingDotsEffect effect;
 
-  /// Default constructor
   ScrollingDotsPainter({
     required this.effect,
     required int count,
@@ -50,7 +40,7 @@ class ScrollingDotsPainter extends BasicIndicatorPainter {
         ? -(firstVisibleDot * distance)
         : -((offset - switchPoint) * distance);
 
-    const smallDotScale = 0.66;
+    final smallDotScale = 0.66;
     final activeScale = effect.activeDotScale - 1.0;
     for (var index = firstVisibleDot; index <= lastVisibleDot; index++) {
       var color = effect.dotColor;

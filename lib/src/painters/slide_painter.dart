@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:smooth_page_indicator/src/effects/slide_effect.dart';
 
+
+import '../effects/slide_effect.dart';
 import 'indicator_painter.dart';
 
-/// Paints a sliding transition effect between active
-/// and non-active dots
-///
-/// Live demo at
-/// https://github.com/Milad-Akarie/smooth_page_indicator/blob/f7ee92e7413a31de77bfb487755d64a385d52a52/demo/slide.gif
 class SlidePainter extends BasicIndicatorPainter {
-  /// The painting configuration
   final SlideEffect effect;
 
-  /// Default constructor
   SlidePainter({
     required this.effect,
     required int count,
@@ -51,13 +45,6 @@ class SlidePainter extends BasicIndicatorPainter {
       dotRadius,
     );
 
-    if (effect.type == SlideType.slideUnder) {
-      canvas.saveLayer(Rect.largest, Paint());
-      canvas.drawRRect(rRect, activeDotPainter);
-      maskStillDots(size, canvas);
-      canvas.restore();
-    } else {
-      canvas.drawRRect(rRect, activeDotPainter);
-    }
+    canvas.drawRRect(rRect, activeDotPainter);
   }
 }

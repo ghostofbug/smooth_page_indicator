@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:smooth_page_indicator/src/effects/worm_effect.dart';
 
+
+import '../effects/worm_effect.dart';
 import 'indicator_painter.dart';
 
-/// Paints a warm-like transition effect between active
-/// and non-active dots
-///
-/// Live demo at
-/// https://github.com/Milad-Akarie/smooth_page_indicator/blob/f7ee92e7413a31de77bfb487755d64a385d52a52/demo/worm.gif
 class WormPainter extends BasicIndicatorPainter {
-  /// The painting configuration
   final WormEffect effect;
 
-  /// Default constructor
   WormPainter({
     required this.effect,
     required int count,
@@ -47,8 +41,7 @@ class WormPainter extends BasicIndicatorPainter {
     var head = xPos;
     var tail = xPos + effect.dotWidth + (wormOffset * distance);
     var halfHeight = effect.dotHeight / 2;
-    final thinWorm =
-        effect.type == WormType.thin || effect.type == WormType.thinUnderground;
+    var thinWorm = effect.type == WormType.thin;
     var dotHeight = thinWorm
         ? halfHeight + (halfHeight * (1 - wormOffset))
         : effect.dotHeight;
@@ -67,14 +60,6 @@ class WormPainter extends BasicIndicatorPainter {
       yPos + dotHeight / 2,
       dotRadius,
     );
-    if (effect.type == WormType.underground ||
-        effect.type == WormType.thinUnderground) {
-      canvas.saveLayer(Rect.largest, Paint());
-      canvas.drawRRect(worm, activeDotPaint);
-      maskStillDots(size, canvas);
-      canvas.restore();
-    } else {
-      canvas.drawRRect(worm, activeDotPaint);
-    }
+    canvas.drawRRect(worm, activeDotPaint);
   }
 }

@@ -1,20 +1,20 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:smooth_page_indicator/src/painters/indicator_painter.dart';
-import 'package:smooth_page_indicator/src/painters/jumping_dot_painter.dart';
 
+
+
+import '../painters/indicator_painter.dart';
+import '../painters/jumping_dot_painter.dart';
 import 'indicator_effect.dart';
 
-/// Holds painting configuration to be used by [JumpingDotPainter]
 class JumpingDotEffect extends BasicIndicatorEffect {
-  /// The maximum scale the dot will hit while jumping
+  // The maximum scale the dot will hit while jumping
   final double jumpScale;
 
-  /// The vertical offset of the jumping dot
+  // The vertical offset of the jumping dot
   final double verticalOffset;
 
-  /// Default constructor
   const JumpingDotEffect({
     Color activeDotColor = Colors.indigo,
     this.jumpScale = 1.4,

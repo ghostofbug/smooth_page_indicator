@@ -1,20 +1,14 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:smooth_page_indicator/src/effects/jumping_dot_effect.dart';
 
+
+import '../effects/jumping_dot_effect.dart';
 import 'indicator_painter.dart';
 
-/// Paints a jumping dot transition effect between active
-/// and non-active dots
-///
-/// Live demo at
-/// https://github.com/Milad-Akarie/smooth_page_indicator/blob/f7ee92e7413a31de77bfb487755d64a385d52a52/demo/jumping-dot.gif
 class JumpingDotPainter extends BasicIndicatorPainter {
-  /// The painting configuration
   final JumpingDotEffect effect;
 
-  /// Default constructor
   JumpingDotPainter({
     required this.effect,
     required int count,
@@ -52,6 +46,7 @@ class JumpingDotPainter extends BasicIndicatorPainter {
       scale = 1.0 + (dotOffset * 2) * targetScale;
     } else {
       scale = effect.jumpScale + ((1 - (dotOffset * 2)) * targetScale);
+      print(((1 - (dotOffset * 2))));
     }
     final piFactor = (dotOffset * math.pi);
     var yPos = size.height / 2;
